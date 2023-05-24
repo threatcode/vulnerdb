@@ -1,17 +1,17 @@
 BIN = griffon-db
 
-SOURCE_REPO_URL = https://github.com/anchore/griffon-db
+SOURCE_REPO_URL = https://github.com/threatcode/griffon-db
 TEMP_DIR = ./.tmp
 RESULTS_DIR = $(TEMP_DIR)/results
 
 DB_ARCHIVE = ./griffon-db-cache.tar.gz
 GRYPE_DB = go run ./cmd/$(BIN)/main.go -c publish/.griffon-db.yaml
-GRYPE_DB_DATA_IMAGE_NAME = ghcr.io/anchore/$(BIN)/data
+GRYPE_DB_DATA_IMAGE_NAME = ghcr.io/threatcode/$(BIN)/data
 date = $(shell date -u +"%y-%m-%d")
 
 # Command templates #################################
 LINT_CMD = $(TEMP_DIR)/golangci-lint run --config .golangci.yaml
-GOIMPORTS_CMD := $(TEMP_DIR)/gosimports -local github.com/anchore
+GOIMPORTS_CMD := $(TEMP_DIR)/gosimports -local github.com/threatcode
 RELEASE_CMD := $(TEMP_DIR)/goreleaser release --rm-dist
 SNAPSHOT_CMD := $(RELEASE_CMD) --skip-publish --skip-sign --snapshot
 CHRONICLE_CMD = $(TEMP_DIR)/chronicle
@@ -102,7 +102,7 @@ bootstrap: $(TEMP_DIR) bootstrap-go bootstrap-tools ## Download and install all 
 bootstrap-tools: $(TEMP_DIR)
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(TEMP_DIR)/ $(GOLANGCILINT_VERSION)
 	curl -sSfL https://raw.githubusercontent.com/wagoodman/go-bouncer/master/bouncer.sh | sh -s -- -b $(TEMP_DIR)/ $(BOUNCER_VERSION)
-	curl -sSfL https://raw.githubusercontent.com/anchore/chronicle/main/install.sh | sh -s -- -b $(TEMP_DIR)/ $(CHRONICLE_VERSION)
+	curl -sSfL https://raw.githubusercontent.com/threatcode/chronicle/main/install.sh | sh -s -- -b $(TEMP_DIR)/ $(CHRONICLE_VERSION)
 	.github/scripts/goreleaser-install.sh -b $(TEMP_DIR)/ $(GORELEASER_VERSION)
 	GOBIN="$(abspath $(TEMP_DIR))" go install github.com/google/go-containerregistry/cmd/crane@$(CRANE_VERSION)
 	GOBIN="$(realpath $(TEMP_DIR))" go install github.com/charmbracelet/glow@$(GLOW_VERSION)
@@ -164,7 +164,7 @@ unit-python: ## Run python unit tests
 .PHONY: unit-go
 unit-go: ## Run GO unit tests (with coverage)
 	$(call title,Running Go unit tests)
-	go test -coverprofile $(TEMP_DIR)/unit-coverage-details.txt $(shell go list ./... | grep -v anchore/griffon-db/test)
+	go test -coverprofile $(TEMP_DIR)/unit-coverage-details.txt $(shell go list ./... | grep -v threatcode/griffon-db/test)
 	@.github/scripts/coverage.py $(COVERAGE_THRESHOLD) $(TEMP_DIR)/unit-coverage-details.txt
 
 .PHONY: acceptance
