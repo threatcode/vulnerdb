@@ -1,11 +1,11 @@
-BIN = grype-db
+BIN = griffon-db
 
-SOURCE_REPO_URL = https://github.com/anchore/grype-db
+SOURCE_REPO_URL = https://github.com/anchore/griffon-db
 TEMP_DIR = ./.tmp
 RESULTS_DIR = $(TEMP_DIR)/results
 
-DB_ARCHIVE = ./grype-db-cache.tar.gz
-GRYPE_DB = go run ./cmd/$(BIN)/main.go -c publish/.grype-db.yaml
+DB_ARCHIVE = ./griffon-db-cache.tar.gz
+GRYPE_DB = go run ./cmd/$(BIN)/main.go -c publish/.griffon-db.yaml
 GRYPE_DB_DATA_IMAGE_NAME = ghcr.io/anchore/$(BIN)/data
 date = $(shell date -u +"%y-%m-%d")
 
@@ -164,7 +164,7 @@ unit-python: ## Run python unit tests
 .PHONY: unit-go
 unit-go: ## Run GO unit tests (with coverage)
 	$(call title,Running Go unit tests)
-	go test -coverprofile $(TEMP_DIR)/unit-coverage-details.txt $(shell go list ./... | grep -v anchore/grype-db/test)
+	go test -coverprofile $(TEMP_DIR)/unit-coverage-details.txt $(shell go list ./... | grep -v anchore/griffon-db/test)
 	@.github/scripts/coverage.py $(COVERAGE_THRESHOLD) $(TEMP_DIR)/unit-coverage-details.txt
 
 .PHONY: acceptance
